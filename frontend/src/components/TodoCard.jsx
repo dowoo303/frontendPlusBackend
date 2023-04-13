@@ -1,20 +1,20 @@
 import axios from "axios";
+import { TbTrashOff } from "react-icons/tb";
 
-const TodoCard = ({ title, isDone, index, getToDoList }) => {
-  const onClickToggle = async () => {
+const TodoCard = ({ title, index, getToDoList, isDone }) => {
+  const onClickIsDone = async () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/todo/done/${index}`
       );
-
       if (response.status !== 200) {
-        alert("요청을 불러오지 못했습니다.");
+        alert("에러발생!");
         return;
       }
 
       getToDoList();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -25,7 +25,7 @@ const TodoCard = ({ title, isDone, index, getToDoList }) => {
       );
 
       if (response.status !== 200) {
-        alert("요청을 불러오지 못했습니다.");
+        alert("에러발생!");
         return;
       }
 
@@ -36,24 +36,31 @@ const TodoCard = ({ title, isDone, index, getToDoList }) => {
   };
 
   return (
-    <>
+    <div className="flex my-4">
       {isDone ? (
-        <li className="flex my-4" onClick={onClickToggle}>
-          <div className="relative">
-            <div className="border-4 border-red-400 w-8 h-8"></div>
-            <div className="absolute top-0 border-4 border-gray-500 bg-red-400 w-8 h-8 scale-75"></div>
-          </div>
-          <div className="text-2xl ml-4 line-through">{title}</div>
-          <button onClick={onClickDelete}>삭제</button>
-        </li>
-      ) : (
-        <li className="flex my-4" onClick={onClickToggle}>
-          <div className="border-4 border-red-400 w-8 h-8"></div>
+        <>
+          <button className="relative" onClick={onClickIsDone}>
+            <div className="border-4 border-pink-400 w-8 h-8 rounded-xl bg-pink-400 p-2"></div>
+            <div className="absolute border-4 border-white top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-8 h-8 scale-75 rounded-xl bg-pink-400 p-2"></div>
+          </button>
           <div className="text-2xl ml-4">{title}</div>
-          <button onClick={onClickDelete}>삭제</button>
-        </li>
+        </>
+      ) : (
+        <>
+          <button
+            className="border-4 border-pink-400 w-8 h-8 rounded-xl"
+            onClick={onClickIsDone}
+          ></button>
+          <div className="text-2xl ml-4">{title}</div>
+        </>
       )}
-    </>
+      <button
+        className="ml-4 hover:text-pink-400 hover:scale-[130%] duration-200"
+        onClick={onClickDelete}
+      >
+        <TbTrashOff />
+      </button>
+    </div>
   );
 };
 
